@@ -1,120 +1,94 @@
-import { useState } from "react";
-import Title from "../Ui/Title";
-import Container from "../Ui/Container";
+import Button from "../Ui/Button";
 import InputGroup from "./components/form/InputGroup";
-import { DeapClon } from "./utils/object_utils";
-import { stateToValues } from "./utils/object_utils";
-Title
+import useForm from "./hooks/useForm";
+import { checkValidity } from "./utils/sarvices";
+
 const data = {
-  fullName : "Kazi raihan", email : "", password: "", number: "",
+  fullName: "Kazi raihan", email: "", password: "", number: "", radio: "", checkbox: "", img: ""
 }
 
-
-  const newData = Object.keys(data).reduce((acc, curr) =>{
-
-  acc[curr] = {
-    value:data[curr],
-    touched: false,
-    focused: false,
-    error: ""
-  }
-  return  acc
-},{})
+const App = () => {
+  const {
+    formState,
+    handleSubmit,
+    HandaleChange,
+    handleBlur,
+    handleFouch, } = useForm({ data, checkValidity })
 
 
-const App = ()=>{
-    const [state, setState] = useState(newData)
-
-    const HandaleChange = (e) =>{
-      const {value, name} = e.target
-        
-      const oldData = JSON.parse(JSON.stringify(state))
-      oldData[name].value =  value
-
-        setState(oldData)
-        }
-        const clondata = DeapClon(state)
-        
-
-        // const StateToValues = (object, key) => {
-        //   //  object = JSON.parse(JSON.stringify(state))
-        //  const data = Object.keys(object).reduce((acc, curr) =>{
-        //     acc[curr]= object[curr][key]
-        //     return acc
-        //   }, {})
-        //   return data
-        // }
-       const values = stateToValues(clondata, "value")
-       
-     
-
-        const checkValidity = (values) =>{
-          const currError = {}
-         const  {fullName, email, password} = values;
-          if(!fullName){
-            currError.fullName = "please enter valid taitle"
-          }
-          const re = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
-          if(!email){
-            currError.email = "please enter valid email"
-          }else if(!email.match(re)){
-            currError.email = `${email} is invalid`
-          }
-          
-          
-          if(!password){
-            currError.password = "please enter valid password"
-          }
-
-          return {
-            currError, 
-            isValid: Object.keys(currError).length == 0,
-          }
-
-        }
-        
-
-          
-        
-
-        const handleSubmit = (e) =>{
-
-          const {isValid, currError} = checkValidity(values)
-          if(isValid){
-            console.log(values);
-          }else{
-            console.log(currError);
-          const  formData = JSON.parse(JSON.stringify(state))
-
-       Object.keys(currError).forEach((key) =>{
-          formData[key].error = currError[key];
-
-         })
-         setState(formData)
-        
-
-            
-
-          }
-          e.preventDefault()
-        }
   return (
-    <Container>
-<h1>react form</h1>
-<form onSubmit={handleSubmit}>
+    <>
+      <h1>Form</h1>
+      <form onSubmit={handleSubmit} style={{width:"450px", margin:"auto"}} >
 
-    <Title $error >
-        This is my title
-    </Title>
-  <InputGroup value ={state.fullName.value } error={state.fullName.error} name="fullName" label="Full Name" HandleChange={HandaleChange}/> 
-  <InputGroup value ={state.email.value } error={state.email.error} name="email" label="Enter your email" HandleChange={HandaleChange}/> 
+        <InputGroup
+          value={formState.fullName.value}
+          handleFouch={handleFouch}
+          handleBlur={handleBlur}
+          error={formState.fullName.error}
+          name="fullName"
+          label="Full Name"
+          HandleChange={HandaleChange}
+        />
+        <InputGroup
+          value={formState.email.value}
+          handleFouch={handleFouch}
+          handleBlur={handleBlur}
+          error={formState.email.error}
+          name="email"
+          label="Enter your email"
+          HandleChange={HandaleChange}
+        />
+        <InputGroup
+          value={formState.password.value}
+          handleFouch={handleFouch}
+          handleBlur={handleBlur}
+          error={formState.password.error}
+          name="password"
+          label="Enter your password"
+          HandleChange={HandaleChange}
+          type={"password"}
+        />
+        <InputGroup
+          value={'one'}
+          name="radio"
+          label="radio One"
+          HandleChange={HandaleChange}
+          type="radio"
+        />
+        <InputGroup
+          value={'two'}
+          name="radio"
+          label="radio tow"
+          HandleChange={HandaleChange}
+          type="radio"
+        />
+        <InputGroup
+          value={formState.checkbox.value}
+          checked={formState.checkbox.value}
+          name="checkbox"
+          label="Cheackbox One"
+          HandleChange={HandaleChange}
+          type="checkbox"
+        />
+        <InputGroup
+          value={formState.img.value}
+          name="img"
+          label="Uplode image"
+          HandleChange={HandaleChange}
+          type="file"
+        />
+  
+        {console.log(formState)}
 
-  <button>Submit</button>
+        <Button onSubmit={handleSubmit}> Submit</Button>
+      </form>
+      <div>
+        <img src={formState.img.value} alt="" />
+      </div>
 
-</form>
-    </Container>
-
+    </>
   )
-}
 
+}
 export default App

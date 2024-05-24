@@ -13,3 +13,20 @@ export  const stateToValues = (object, key) => {
    return data
  }
  
+ export const valueToState = (data) =>{
+
+  const formData = Object.keys(data).reduce((acc, curr) => {
+
+    acc[curr] = {
+      value: data[curr],
+      touched: false,
+      focused: false,
+      error: "",
+      
+    }
+  
+    return acc
+  }, {})
+  
+  return formData
+ }

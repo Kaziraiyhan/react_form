@@ -7,7 +7,7 @@ const Title = styled.h3`
  color: ${props => props.$error ? "#e54545" : "#212121"};
  padding-top: 5px;
  position: absolute;
- bottom: 10px;
+ bottom: 3px;
 
 `;
 export default Title

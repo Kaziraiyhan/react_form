@@ -9,23 +9,35 @@ display : flex;
 flex-direction: column;
 row-gap: 10px;
 position: relative;
-padding-bottom: 30px;
-
-
+padding-bottom: 20px;
 `
-
-
-
-const InputGroup = ({ label, value, name, placeholder, error, HandleChange }) => {
+const InputGroup = ({
+    label,
+    type,
+    value,
+    name,
+    placeholder,
+    error,
+    HandleChange,
+    handleFouch,
+    handleBlur
+}) => {
 
     return (
         <>
             <Wrapper>
 
                 <Label htmlFor={name}> {label}</Label>
-                <Input name={name} $error={error} value={value} onChange={HandleChange} placeholder={placeholder ?? ""} />
+                <Input onFocus=
+                    {handleFouch}
+                    type={type}
+                    onBlur={handleBlur}
+                    name={name}
+                    $error={error}
+                    value={value}
+                    onChange={HandleChange}
+                    placeholder={placeholder ?? ""} />
                 <Title $error> {error} </Title>
-
 
             </Wrapper>
 
@@ -38,10 +50,17 @@ const InputGroup = ({ label, value, name, placeholder, error, HandleChange }) =>
 // PropTypes validation
 InputGroup.propTypes = {
     label: PropTypes.string.isRequired,
-    value: PropTypes.string.isRequired,
+    value: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.bool
+    ]).isRequired,
     name: PropTypes.string.isRequired,
+    type: PropTypes.string,
+    
     placeholder: PropTypes.string,
     HandleChange: PropTypes.func,
+    handleFouch: PropTypes.func,
+    handleBlur: PropTypes.func,
     error: PropTypes.string,
 };
 export default InputGroup
